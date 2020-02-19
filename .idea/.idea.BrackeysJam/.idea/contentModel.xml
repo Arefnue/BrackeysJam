@@ -6,52 +6,118 @@
     <e p="C:\Users\Great\Documents\GitHub\ItchIoJams\BrackeysJam\HowlyandMe\BrackeysJam" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="Samples" t="Include">
-          <e p="Cinemachine" t="Include">
-            <e p="2.5.0" t="Include">
-              <e p="Cinemachine Example Scenes" t="Include">
-                <e p="Scenes" t="Include">
-                  <e p="OverTheShoulderAim" t="Include">
-                    <e p="ActivateOnKeypress.cs" t="Include" />
-                  </e>
-                  <e p="Scripting" t="Include">
-                    <e p="ScriptingExample.cs" t="Include" />
-                  </e>
-                  <e p="Trigger volumes" t="Include">
-                    <e p="GenericTrigger.cs" t="Include" />
-                  </e>
-                </e>
-                <e p="Shared" t="Include">
-                  <e p="Models" t="Include">
-                    <e p="UnityCharacter" t="Include">
-                      <e p="Scripts" t="Include">
-                        <e p="CharacterMovement.cs" t="Include" />
-                        <e p="CharacterMovement2D.cs" t="Include" />
-                      </e>
+        <e p="Scripts" t="Include">
+          <e p="BulletController.cs" t="Include" />
+          <e p="CameraController.cs" t="Include" />
+          <e p="EnemyController.cs" t="Include" />
+          <e p="EnemySpawner.cs" t="Include" />
+          <e p="GameMaster.cs" t="Include" />
+          <e p="GunController.cs" t="Include" />
+          <e p="Health.cs" t="Include" />
+          <e p="HolwyController.cs" t="Include" />
+          <e p="Old" t="Include">
+            <e p="PlayerController.cs" t="Include" />
+          </e>
+          <e p="PlayerMovement.cs" t="Include" />
+          <e p="PropController.cs" t="Include" />
+          <e p="PropSpawner.cs" t="Include" />
+          <e p="Reticle.cs" t="Include" />
+        </e>
+        <e p="Tools" t="Include">
+          <e p="MentalDreamsAssets" t="Include">
+            <e p="SoldierSoundsPack" t="Include">
+              <e p="ReadMe!.txt" t="Include" />
+            </e>
+          </e>
+          <e p="NavMeshComponents" t="Include">
+            <e p="Editor" t="Include">
+              <e p="NavMeshAssetManager.cs" t="Include" />
+              <e p="NavMeshComponentsEditor.asmdef" t="Include" />
+              <e p="NavMeshComponentsGUIUtility.cs" t="Include" />
+              <e p="NavMeshLinkEditor.cs" t="Include" />
+              <e p="NavMeshModifierEditor.cs" t="Include" />
+              <e p="NavMeshModifierVolumeEditor.cs" t="Include" />
+              <e p="NavMeshSurfaceEditor.cs" t="Include" />
+            </e>
+            <e p="Examples" t="Include">
+              <e p="Editor" t="Include">
+                <e p="NavMeshComponentsExamplesEditor.asmdef" t="Include" />
+                <e p="NavMeshPrefabInstanceEditor.cs" t="Include" />
+              </e>
+              <e p="NavMeshComponentsExamples.asmdef" t="Include" />
+              <e p="Scripts" t="Include">
+                <e p="AgentLinkMover.cs" t="Include" />
+                <e p="ClickToMove.cs" t="Include" />
+                <e p="DestroyOnTrigger.cs" t="Include" />
+                <e p="DungeonManager.cs" t="Include" />
+                <e p="EnableIffSleeping.cs" t="Include" />
+                <e p="FreeCam.cs" t="Include" />
+                <e p="LocalNavMeshBuilder.cs" t="Include" />
+                <e p="MeshTool.cs" t="Include" />
+                <e p="NavMeshPrefabInstance.cs" t="Include" />
+                <e p="NavMeshSourceTag.cs" t="Include" />
+                <e p="Oscillator.cs" t="Include" />
+                <e p="RandomInstancing.cs" t="Include" />
+                <e p="RandomWalk.cs" t="Include" />
+                <e p="SpawnPrefabOnKeyDown.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="NavMeshComponents.asmdef" t="Include" />
+              <e p="NavMeshLink.cs" t="Include" />
+              <e p="NavMeshModifier.cs" t="Include" />
+              <e p="NavMeshModifierVolume.cs" t="Include" />
+              <e p="NavMeshSurface.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Samples" t="Include">
+            <e p="Cinemachine" t="Include">
+              <e p="2.5.0" t="Include">
+                <e p="Cinemachine Example Scenes" t="Include">
+                  <e p="Scenes" t="Include">
+                    <e p="OverTheShoulderAim" t="Include">
+                      <e p="ActivateOnKeypress.cs" t="Include" />
+                    </e>
+                    <e p="Scripting" t="Include">
+                      <e p="ScriptingExample.cs" t="Include" />
+                    </e>
+                    <e p="Trigger volumes" t="Include">
+                      <e p="GenericTrigger.cs" t="Include" />
                     </e>
                   </e>
-                  <e p="Scripts" t="Include">
-                    <e p="ActivateCameraWithDistance.cs" t="Include" />
-                    <e p="ActivateCamOnPlay.cs" t="Include" />
-                    <e p="ExampleHelpWindow.cs" t="Include" />
-                    <e p="MixingCameraBlend.cs" t="Include" />
-                    <e p="PlayerMove.cs" t="Include" />
-                    <e p="PlayerMoveOnSphere.cs" t="Include" />
-                    <e p="PlayerMovePhysics.cs" t="Include" />
+                  <e p="Shared" t="Include">
+                    <e p="Models" t="Include">
+                      <e p="UnityCharacter" t="Include">
+                        <e p="Scripts" t="Include">
+                          <e p="CharacterMovement.cs" t="Include" />
+                          <e p="CharacterMovement2D.cs" t="Include" />
+                        </e>
+                      </e>
+                    </e>
+                    <e p="Scripts" t="Include">
+                      <e p="ActivateCameraWithDistance.cs" t="Include" />
+                      <e p="ActivateCamOnPlay.cs" t="Include" />
+                      <e p="ExampleHelpWindow.cs" t="Include" />
+                      <e p="MixingCameraBlend.cs" t="Include" />
+                      <e p="PlayerMove.cs" t="Include" />
+                      <e p="PlayerMoveOnSphere.cs" t="Include" />
+                      <e p="PlayerMovePhysics.cs" t="Include" />
+                    </e>
                   </e>
                 </e>
               </e>
             </e>
           </e>
         </e>
-        <e p="Scripts" t="Include">
-          <e p="BulletController.cs" t="Include" />
-          <e p="CMConfig.cs" t="Include" />
-          <e p="GunController.cs" t="Include" />
-          <e p="PlayerController.cs" t="Include" />
+        <e p="ToonSoldiers_demo" t="Include">
+          <e p="ToonSoldiers_demo.txt" t="Include" />
         </e>
       </e>
       <e p="BrackeysJam.sln" t="IncludeFlat" />
+      <e p="NavMeshComponents.csproj" t="IncludeRecursive" />
+      <e p="NavMeshComponentsEditor.csproj" t="IncludeRecursive" />
+      <e p="NavMeshComponentsExamples.csproj" t="IncludeRecursive" />
+      <e p="NavMeshComponentsExamplesEditor.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
