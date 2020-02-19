@@ -1,110 +1,144 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+namespace Controllers
 {
-    private Transform playerTransform;
-    private Transform holwyTransform;
-    
-    private NavMeshAgent agent;
-    private Transform targetTransform;
-
-    public float attackRangeRadius;
-
-    public Vector3 spawnPosition;
-
-    public int hungerValue;
-    
-    
-    [HideInInspector]public enum State
-    {
-        Move,
-        Attack,
-        Busy,
-        Destroy
+    public class EnemyController : MonoBehaviour
+    {    
+        [Header("EnemyStats")]
+        #region EnemyStats
         
-    }
+        public int hungerValue;
 
-    public float moveSpeed;
+        #endregion
+        
+        [Header("Navigation")]
+        #region Navigation
+        
+        private Transform playerTransform;
+        private Transform holwyTransform;
+    
+        private NavMeshAgent agent;
+        private Transform targetTransform;
+        
+        [HideInInspector]
+        public Vector3 spawnPosition;
+        
+        public float attackRangeRadius;
+        
+        #endregion
+        
+        #region EnemyBehaviour
+        
+        //State Machine for enemy 
+        [HideInInspector]public enum State
+        {
+            Move,
+            Attack,
+            Busy,
+            Destroy
+        
+        }
+        
+        [HideInInspector]public State state = State.Busy;
 
-    [HideInInspector]public State state = State.Busy;
-    
-    
-    private void Start()
-    {
-        GameMaster.instance.enemyList.Add(this);
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        holwyTransform = GameObject.FindGameObjectWithTag("Holwy").transform;
+        #endregion
+        
+
+        private void Start()
+        {
+            GameMaster.instance.enemyList.Add(this);
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            holwyTransform = GameObject.FindGameObjectWithTag("Holwy").transform;
        
-        agent = GetComponent<NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
 
-        agent.stoppingDistance = attackRangeRadius;
+            agent.stoppingDistance = attackRangeRadius;
+            spawnPosition = transform.position;
 
-        spawnPosition = transform.position;
-
-    }
-
-    private void Update()
-    {
-        DetermineState();
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            state = State.Destroy;
-            Destroy(gameObject);
         }
-        
-        switch (state)
-        {
-            case State.Move:
-                agent.SetDestination(targetTransform.position);
-                break;
-            case State.Attack:
-                Debug.Log("Attack!");
-                break;
-            case State.Busy:
-                Debug.Log("Busy!");
-                break;
-            case State.Destroy:
-                break;
-            default:
-                Debug.Log("Default!");
-                break;
-        }
-        
-        
-    }
 
-    private void DetermineState()
-    {
-        if (Vector3.Distance(transform.position, playerTransform.position) <= attackRangeRadius)
+        private void Update()
         {
+            DetermineState(); //Düşmanımızın davranışını burda belirliyoruz
             
-            state = State.Attack;
+            
+            //Düşmanların hepsini öldürür
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                state = State.Destroy;
+                Destroy(gameObject);
+            }
+            
+            //State machine
+            switch (state)
+            {
+                case State.Move:
+                    
+                    //Hareket animasyonları vs. buraya gelecek
+                    
+                    agent.SetDestination(targetTransform.position);
+                    break;
+                case State.Attack:
+                    
+                    //Buraya düşmanın saldırı animasyonu ve particleı gelecek
+                
+                    //Saldırı sonrası statslar güncellenecek
+                    
+                    Debug.Log("Attack!");
+                    break;
+                case State.Busy:
+                    
+                    //Animasyonlar için zaman gerektiğinde kullanmak için
+                    
+                    Debug.Log("Busy!");
+                    break;
+                case State.Destroy:
+                    
+                    //Öldüğünde olacak şeyler
+                    
+                    break;
+                default:
+                    Debug.Log("Default!");
+                    break;
+            }
+        
+        
         }
-        else
+
+        //Düşmanların ne yapacağını belirler
+        private void DetermineState()
         {
-            targetTransform = playerTransform;
-            state = State.Move;
+            //Saldırı menzilindeyse saldır
+            if (Vector3.Distance(transform.position, playerTransform.position) <= attackRangeRadius)
+            {
+                state = State.Attack;
+            }
+            else
+            {
+                targetTransform = playerTransform; //Düşmanların hedefini playera odaklar. Zaman yeterse AI güçlendirip belli kosullarda bunu Holwy'e yönlendireceğiz
+                state = State.Move;
+            }
         }
-    }
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bullet"))
+        
+        //Bir şeye çarpınca çalışır
+        private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Enemy is dead");
-            Destroy(gameObject);
+            //Eğer mermiye çarparsa
+            if (other.CompareTag("Bullet"))
+            {
+                //Portal ile ölme animasyonu, particleı vs. buraya gelecek
+                
+                Debug.Log("Enemy is dead");
+                Destroy(gameObject);
+            }
         }
-    }
 
-    private void OnDestroy()
-    {
-        GameMaster.instance.enemyList.Remove(this);
+        //Düşman destroy olduğunda çalışır
+        private void OnDestroy()
+        {
+            GameMaster.instance.enemyList.Remove(this);//Düşman listesinden bunu çıkarır
+        }
     }
 }

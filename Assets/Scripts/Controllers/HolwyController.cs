@@ -1,62 +1,84 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class HolwyController : MonoBehaviour
+namespace Controllers
 {
-    [Range(0,0.01f)]
-    public float divRate;
-
-    public float minLimit;
-    public float maxLimit;
-    private void OnTriggerEnter(Collider other)
+    public class HolwyController : MonoBehaviour
     {
-        if (other.CompareTag("Player"))
-        {
-            EatThisHolwy();
-        }
+        [Range(0,0.01f)]
+        public float divRate;
 
-        if (other.CompareTag("Enemy"))
+        public float minLimit;
+        public float maxLimit;
+    
+    
+    
+        //Holwy'nin karnını doyurur
+        public void EatThisHolwy()
         {
-            var enemyController = other.GetComponent<EnemyController>();
-
-            var enemyControllerHungerValue = enemyController.hungerValue;
-            Destroy(other.gameObject);
-            GameMaster.instance.hungerOnHolwy -= enemyControllerHungerValue;
+            //Eğer elimizde yemek yoksa
+            if (GameMaster.instance.hungerOnPlayer <= 0)
+            {    
+                //Elimizde yemek olmayıp Holwy ile etkileşime geçince olacak şeyler burada
             
-            var holwyRadius = new Vector3(enemyControllerHungerValue*(divRate),0,enemyControllerHungerValue*(divRate));
-            transform.localScale -= holwyRadius;
-            if (transform.localScale.magnitude <= minLimit)
-            {
-                Debug.Log("Holwy is dead");
-                Destroy(gameObject);
+                Debug.Log("You have nothing...");
             }
-
-        }
-    }
-
-    public void EatThisHolwy()
-    {
-        if (GameMaster.instance.hungerOnPlayer <= 0)
-        {
-            Debug.Log("You have nothing...");
-        }
-        else
-        {
-            var hungerOnPlayer = GameMaster.instance.hungerOnPlayer;
-            GameMaster.instance.hungerOnHolwy += hungerOnPlayer;
-            GameMaster.instance.hungerOnPlayer = 0;
-            var holwyRadius = new Vector3(hungerOnPlayer*(divRate),0,hungerOnPlayer*(divRate));
-            transform.localScale += holwyRadius;
-            
-            if (transform.localScale.magnitude >= maxLimit)
+            else
             {
-                Debug.Log("Holwy is big");
+                //Eğer elimizde yemek var ise
+            
+                var hungerOnPlayer = GameMaster.instance.hungerOnPlayer; //Ne kadar yemek olduğunu kaydet
+                GameMaster.instance.hungerOnHolwy += hungerOnPlayer; //Holwy'nin karnını o kadar doyur
+                GameMaster.instance.hungerOnPlayer = 0; //Elimizdeki yemekleri resetle
+            
+                //Yedirdiğimiz oranda Holwy'i büyüt
+                var holwyRadius = new Vector3(hungerOnPlayer*(divRate),0,hungerOnPlayer*(divRate)); 
+                transform.localScale += holwyRadius;
+            
+                //Eğer yeterince büyük ise
+                if (transform.localScale.magnitude >= maxLimit)
+                {
+                    //Burası oyunu kazanma yeri
                 
+                    Debug.Log("Holwy is big");
+                
+                }
             }
         }
+    
+    
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                EatThisHolwy();
+            }
+
+            if (other.CompareTag("Enemy"))
+            {
+                var enemyController = other.GetComponent<EnemyController>(); //Çarptığı düşmanın bilgilerini kaydet
+
+                var enemyControllerHungerValue = enemyController.hungerValue; //Düşmanın tadı ne kadar kötü
+            
+                Destroy(other.gameObject); //Bilgileri aldık o zaman destroy it
+            
+                GameMaster.instance.hungerOnHolwy -= enemyControllerHungerValue; //Holwy'i bu kadar acıktır
+            
+            
+                var holwyRadius = new Vector3(enemyControllerHungerValue*(divRate),0,enemyControllerHungerValue*(divRate));// Holwy'i küçült
+                transform.localScale -= holwyRadius;
+                
+                //Eğer Holwy çok küçülürse
+                if (transform.localScale.magnitude <= minLimit)
+                {
+                    //Oyunu kaybettin
+                    
+                    Debug.Log("Holwy is dead");
+                    Destroy(gameObject);
+                }
+
+            }
+        }
+
+
     }
-
-
 }

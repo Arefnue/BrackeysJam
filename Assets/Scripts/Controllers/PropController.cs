@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PropController : MonoBehaviour
+namespace Controllers
 {
-    public float spawnPointY;
-
-    public int hungerValue;
-
-
-    private void OnTriggerEnter(Collider other)
+    public class PropController : MonoBehaviour
     {
-        if(other.CompareTag("Player"))
+        public float spawnPointY;
+
+        public int hungerValue;
+
+
+        private void OnTriggerEnter(Collider other)
         {
-            GameMaster.instance.AddHungerToPlayer(hungerValue,gameObject);
-            Debug.Log(GameMaster.instance.hungerOnPlayer);
-            
+            if(other.CompareTag("Player"))
+            {
+                GameMaster.instance.AddHungerToPlayer(hungerValue,gameObject);
+                
+            }
         }
     }
 }

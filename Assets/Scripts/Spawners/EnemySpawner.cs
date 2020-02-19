@@ -1,47 +1,61 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Controllers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class EnemySpawner : MonoBehaviour
+namespace Spawners
 {
-    public List<EnemyController> enemies;
-
-    public float spawnRateMin;
-    public float spawnRateMax;
-    public float initalSpawn;
-
-    private int spawnIndex;
-    private void Start()
+    public class EnemySpawner : MonoBehaviour
     {
-        StartCoroutine(DelaySpawn());
-    }
+        public List<EnemyController> enemies;
 
-    IEnumerator DelaySpawn()
-    {
-        yield return new WaitForSeconds(initalSpawn);
-        StartCoroutine(SpawnEnemies());
-    }
+        public float spawnRateMin;
+        public float spawnRateMax;
+        public float initalSpawn;
 
-    IEnumerator SpawnEnemies()
-    {
-        spawnIndex= Random.Range(0, enemies.Count);
-        
-        while (true)
+        private int spawnIndex;
+        private void Start()
         {
-            if (GameMaster.instance.enemyList.Count >= GameMaster.instance.enemyLimit)
-            {
-                yield return new WaitWhile(()=>GameMaster.instance.enemyList.Count >= GameMaster.instance.enemyLimit);
-            }
-            Instantiate(enemies[spawnIndex], transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(spawnRateMin,spawnRateMax));
-            spawnIndex= Random.Range(0, enemies.Count);
-            
+            StartCoroutine(DelaySpawn());
         }
+
+        //Ilk üretim için delay
+        IEnumerator DelaySpawn()
+        {
+            yield return new WaitForSeconds(initalSpawn);
+            
+            StartCoroutine(SpawnEnemies());
+        }
+
+        //Düşmanları belirli aralıkta üret
+        IEnumerator SpawnEnemies()
+        {
+            spawnIndex= Random.Range(0, enemies.Count);//Random düşman seçiyoruz
+            
+            while (true)
+            {
+                //Eğer düşman sayısı istenenden fazla ise
+                if (GameMaster.instance.enemyList.Count >= GameMaster.instance.enemyLimit)
+                {
+                    //Durmadan önce çalışır
+                    yield return new WaitWhile(()=>GameMaster.instance.enemyList.Count >= GameMaster.instance.enemyLimit);//Düşman sayısı azalana kadar bekle
+                    //Sonra
+                }
+                
+                Instantiate(enemies[spawnIndex], transform.position, Quaternion.identity);//Düşman üret
+                
+                //Önce
+                yield return new WaitForSeconds(Random.Range(spawnRateMin,spawnRateMax));//Bu kadar bekle
+                //Sonra
+                
+                spawnIndex= Random.Range(0, enemies.Count);//Yeni düşmanı seç
+            
+            }
         
+        }
+    
+    
     }
-    
-    
 }

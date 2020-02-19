@@ -21,21 +21,19 @@ public class PlayerMovement : MonoBehaviour
 
 	private void Update()
 	{
+		//Hareket etme tuşları ile yönü belirle
 		var horizontal = Input.GetAxis("Horizontal");
 		var vertical = Input.GetAxis("Vertical");
 		
+		animator.SetFloat("Speed", vertical); //Animasyon için
 
-		var movement = new Vector3(horizontal, 0, vertical);
-
-		animator.SetFloat("Speed", vertical);
-
-		transform.Rotate(Vector3.up, horizontal * turnSpeed * Time.deltaTime);
+		transform.Rotate(Vector3.up, horizontal * turnSpeed * Time.deltaTime);// Sağ sol tuşlarına basıldığında döndürür
 
 		if (vertical != 0)
 		{
-			float moveSpeedToUse = (vertical > 0) ? forwardMoveSpeed : backwardMoveSpeed;
+			float moveSpeedToUse = (vertical > 0) ? forwardMoveSpeed : backwardMoveSpeed; //İleri ve geri hız değerlerini belirler
 
-			characterController.SimpleMove(transform.forward * (moveSpeedToUse * vertical));
+			characterController.SimpleMove(transform.forward * (moveSpeedToUse * vertical)); //Hareket ettirir
 		}
 		
 	}

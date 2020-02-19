@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Controllers;
 using UnityEngine;
 
 public class GameMaster : MonoBehaviour
@@ -31,21 +32,29 @@ public class GameMaster : MonoBehaviour
     }
 
 
+    //Proplara çarpınca açlık değerini alır
     public void AddHungerToPlayer(int value,GameObject prop)
     {
+        //Eğer almaya çalıştığımız şeyi taşıyamıyorsak
         if (hungerOnPlayer + value >= hungerLimit)
         {
             OnCantCarry();
         }
         else
         {
-            hungerOnPlayer += value;
-            Destroy(prop);
+            //Taşıyabiliyorsak
+            
+            hungerOnPlayer += value;//Envantere ekle
+            
+            Destroy(prop);//Çarptığımız objeyi sil
+            
         }
     }
 
     private void OnCantCarry()
     {
+        //Taşıyamadığı zaman olacak şeyler buraya
+        
         Debug.Log("Cant Carry");
     }
     
