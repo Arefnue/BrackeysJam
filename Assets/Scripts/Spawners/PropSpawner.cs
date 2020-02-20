@@ -22,7 +22,9 @@ namespace Spawners
          PropController instance = Instantiate(props[spawnIndex], position, Quaternion.identity);//Prop üret
       
          instance.transform.position = new Vector3(position.x,position.y+instance.spawnPointY,position.z);//Propun positionunu düzelt
+         instance.transform.SetParent(GameMaster.instance.levelHolder);
       }
+      
   
    
    

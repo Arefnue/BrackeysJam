@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Controllers
 {
@@ -8,14 +9,25 @@ namespace Controllers
 
         public int hungerValue;
 
+        private bool playerHit = true;
 
         private void OnTriggerEnter(Collider other)
         {
             if(other.CompareTag("Player"))
             {
-                GameMaster.instance.AddHungerToPlayer(hungerValue,gameObject);
+                if (playerHit)
+                {
+                    playerHit = false;
+                    GameMaster.instance.AddHungerToPlayer(hungerValue,gameObject);
+                }
+                
                 
             }
+        }
+
+        private void LateUpdate()
+        {
+            playerHit = true;
         }
     }
 }

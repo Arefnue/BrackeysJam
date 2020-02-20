@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,6 +12,15 @@ public class PlayerMovement : MonoBehaviour
 	private float backwardMoveSpeed = 3;
 	[SerializeField]
 	private float turnSpeed = 150f;
+	
+	public int maxHealth = 100;
+	public int currentHealth;
+
+	public Health healthBar;
+
+	private Vector3 moveDirection;
+
+	public float jumpForce = 20f;
 
 	private void Awake()
 	{
@@ -19,11 +29,20 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 	}
 
+	private void Start()
+	{
+		currentHealth = maxHealth;
+		healthBar.SetMaxHealth(maxHealth);
+	}
+
 	private void Update()
 	{
+		
 		//Hareket etme tuşları ile yönü belirle
 		var horizontal = Input.GetAxis("Horizontal");
 		var vertical = Input.GetAxis("Vertical");
+		
+		
 		
 		animator.SetFloat("Speed", vertical); //Animasyon için
 
@@ -35,6 +54,19 @@ public class PlayerMovement : MonoBehaviour
 
 			characterController.SimpleMove(transform.forward * (moveSpeedToUse * vertical)); //Hareket ettirir
 		}
+
+		if (currentHealth <= 0)
+		{
+			Debug.Log("Player died");
+			UiMaster.instance.OpenPlayerDeadPanel(true);
+		}
 		
+
+	}
+	
+	public void TakeDamage(int damage)
+	{
+		currentHealth -= damage;
+		healthBar.SetHealth(currentHealth);
 	}
 }

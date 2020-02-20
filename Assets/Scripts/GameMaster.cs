@@ -18,6 +18,8 @@ public class GameMaster : MonoBehaviour
     public int hungerLimit;
 
     public int hungerOnHolwy;
+
+    public Transform levelHolder;
     
     private void Awake()
     {

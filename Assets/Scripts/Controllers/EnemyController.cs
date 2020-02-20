@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Controllers
@@ -9,6 +10,8 @@ namespace Controllers
         #region EnemyStats
         
         public int hungerValue;
+
+        public int damage;
 
         #endregion
         
@@ -36,11 +39,14 @@ namespace Controllers
             Move,
             Attack,
             Busy,
-            Destroy
+            Destroy,
+            Idle
         
         }
         
-        [HideInInspector]public State state = State.Busy;
+        [HideInInspector]public State state = State.Idle;
+        
+        private PlayerMovement playerObject;
 
         #endregion
         
@@ -48,16 +54,18 @@ namespace Controllers
         private void Start()
         {
             GameMaster.instance.enemyList.Add(this);
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            playerObject = FindObjectOfType<PlayerMovement>();
+            playerTransform = playerObject.transform;
             holwyTransform = GameObject.FindGameObjectWithTag("Holwy").transform;
-       
+            
             agent = GetComponent<NavMeshAgent>();
 
             agent.stoppingDistance = attackRangeRadius;
             spawnPosition = transform.position;
+            state = State.Idle;
 
         }
-
+        
         private void Update()
         {
             DetermineState(); //Düşmanımızın davranışını burda belirliyoruz
@@ -84,6 +92,7 @@ namespace Controllers
                     //Buraya düşmanın saldırı animasyonu ve particleı gelecek
                 
                     //Saldırı sonrası statslar güncellenecek
+                    StartCoroutine(Attack());
                     
                     Debug.Log("Attack!");
                     break;
@@ -98,6 +107,8 @@ namespace Controllers
                     //Öldüğünde olacak şeyler
                     
                     break;
+                case State.Idle:
+                    break;
                 default:
                     Debug.Log("Default!");
                     break;
@@ -110,7 +121,11 @@ namespace Controllers
         private void DetermineState()
         {
             //Saldırı menzilindeyse saldır
-            if (Vector3.Distance(transform.position, playerTransform.position) <= attackRangeRadius)
+            if (state == State.Busy)
+            {
+                
+            }
+            else if (Vector3.Distance(transform.position, playerTransform.position) <= attackRangeRadius)
             {
                 state = State.Attack;
             }
@@ -121,6 +136,16 @@ namespace Controllers
             }
         }
 
+        IEnumerator Attack()
+        {
+            state = State.Busy;
+            playerObject.TakeDamage(damage);
+            Debug.Log("AAAr");
+            yield return new WaitForSeconds(1f);
+
+            state = State.Idle;
+        }
+
         
         //Bir şeye çarpınca çalışır
         private void OnTriggerEnter(Collider other)
@@ -129,10 +154,12 @@ namespace Controllers
             if (other.CompareTag("Bullet"))
             {
                 //Portal ile ölme animasyonu, particleı vs. buraya gelecek
-                
+                state = State.Destroy;
                 Debug.Log("Enemy is dead");
                 Destroy(gameObject);
             }
+            
+            
         }
 
         //Düşman destroy olduğunda çalışır

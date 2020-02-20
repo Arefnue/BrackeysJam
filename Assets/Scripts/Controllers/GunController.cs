@@ -59,7 +59,9 @@ namespace Controllers
 			
 			newBullet.speed = bulletSpeed; //Merminin hızını ayarlar
 			newBullet.moveDirection = ray.direction*100; // Merminin gideceği yönü ayarlar. Buralarda bir yerlerde aim ile ilgili bir sıkıntı var.
-		
+			
+			newBullet.transform.SetParent(GameMaster.instance.levelHolder);
+			
 			RaycastHit hitInfo;
 
 			if (Physics.Raycast(ray, out hitInfo, 10))

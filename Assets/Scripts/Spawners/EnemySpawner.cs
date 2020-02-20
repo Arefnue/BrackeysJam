@@ -44,8 +44,9 @@ namespace Spawners
                     //Sonra
                 }
                 
-                Instantiate(enemies[spawnIndex], transform.position, Quaternion.identity);//Düşman üret
+                EnemyController instance = Instantiate(enemies[spawnIndex], transform.position, Quaternion.identity);//Düşman üret
                 
+                instance.transform.SetParent(GameMaster.instance.levelHolder);
                 //Önce
                 yield return new WaitForSeconds(Random.Range(spawnRateMin,spawnRateMax));//Bu kadar bekle
                 //Sonra
