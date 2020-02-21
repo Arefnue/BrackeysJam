@@ -14,7 +14,12 @@ namespace Controllers
 
         private void Update()
         {
-            transform.Translate(moveDirection * (speed * Time.deltaTime)); //Mermiyi belirlenen directionda sürekli ileri götürür.
+            //transform.Translate(moveDirection * (speed * Time.deltaTime)); //Mermiyi belirlenen directionda sürekli ileri götürür.
+            transform.position = Vector3.MoveTowards(transform.position, moveDirection, speed * Time.deltaTime);
+            if (transform.position == moveDirection)
+            {
+                Destroy(gameObject);
+            }
         }
 
         //Merminin süresi dolduğunda çalışır
@@ -45,6 +50,9 @@ namespace Controllers
                 Debug.Log("Bullet in Ground");
                 Destroy(gameObject);
             }
+            
+            
+            
         }
     }
 }

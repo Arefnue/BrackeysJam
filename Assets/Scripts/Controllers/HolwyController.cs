@@ -44,7 +44,7 @@ namespace Controllers
                 GameMaster.instance.hungerOnHolwy += hungerOnPlayer; //Holwy'nin karnını o kadar doyur
                 TakeDamage(-hungerOnPlayer);
                 GameMaster.instance.hungerOnPlayer = 0; //Elimizdeki yemekleri resetle
-            
+                UiMaster.instance.carrySlider.SetHealth(0);
                 //Yedirdiğimiz oranda Holwy'i büyüt
                 var holwyRadius = new Vector3(hungerOnPlayer*(divRate),0,hungerOnPlayer*(divRate)); 
                 transform.localScale += holwyRadius;

@@ -5,7 +5,7 @@ namespace Controllers
 {
     public class CameraController : MonoBehaviour
     {
-        private CinemachineComposer composer;
+        [HideInInspector]public CinemachineComposer composer;
 
         [SerializeField]
         private float sensitivity = 1f;
@@ -35,8 +35,8 @@ namespace Controllers
             composer.m_TrackedObjectOffset.y += vertical; //Dikey hareket
             composer.m_TrackedObjectOffset.y = Mathf.Clamp(composer.m_TrackedObjectOffset.y, yMin, yMax);//Hareketi belirlenen aralıkta kısıtlar
         
-            composer.m_TrackedObjectOffset.x += horizontal;//Yatay hareket
-            composer.m_TrackedObjectOffset.x = Mathf.Clamp(composer.m_TrackedObjectOffset.x, xMin, xMax);//Hareketi belirlenen aralıkta kısıtlar
+            //composer.m_TrackedObjectOffset.x += horizontal;//Yatay hareket
+            //composer.m_TrackedObjectOffset.x = Mathf.Clamp(composer.m_TrackedObjectOffset.x, xMin, xMax);//Hareketi belirlenen aralıkta kısıtlar
         }
     }
 }

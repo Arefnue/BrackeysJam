@@ -33,12 +33,18 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        UiMaster.instance.carrySlider.SetMaxHealth(hungerLimit);
+        UiMaster.instance.carrySlider.SetHealth(0);
+    }
+
 
     //Proplara çarpınca açlık değerini alır
     public void AddHungerToPlayer(int value,GameObject prop)
     {
         //Eğer almaya çalıştığımız şeyi taşıyamıyorsak
-        if (hungerOnPlayer + value >= hungerLimit)
+        if (hungerOnPlayer + value > hungerLimit)
         {
             OnCantCarry();
         }
@@ -47,7 +53,7 @@ public class GameMaster : MonoBehaviour
             //Taşıyabiliyorsak
             
             hungerOnPlayer += value;//Envantere ekle
-            
+            UiMaster.instance.carrySlider.SetHealth(hungerOnPlayer);
             Destroy(prop);//Çarptığımız objeyi sil
             
         }

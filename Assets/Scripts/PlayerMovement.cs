@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
 	public Health healthBar;
 
 	private Vector3 moveDirection;
+	public float gravityScale = 5f;
 
 	public float jumpForce = 20f;
 
@@ -37,23 +38,49 @@ public class PlayerMovement : MonoBehaviour
 
 	private void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			UiMaster.instance.OpenPausePanel(true);
+		}
 		
+		var yStore = moveDirection.y;
 		//Hareket etme tuşları ile yönü belirle
-		var horizontal = Input.GetAxis("Horizontal");
+		var horizontal = Input.GetAxis("Mouse X");
 		var vertical = Input.GetAxis("Vertical");
-		
-		
+
+		var horizontalMove = Input.GetAxis("Horizontal");
 		
 		animator.SetFloat("Speed", vertical); //Animasyon için
 
 		transform.Rotate(Vector3.up, horizontal * turnSpeed * Time.deltaTime);// Sağ sol tuşlarına basıldığında döndürür
-
+		
+		
 		if (vertical != 0)
 		{
 			float moveSpeedToUse = (vertical > 0) ? forwardMoveSpeed : backwardMoveSpeed; //İleri ve geri hız değerlerini belirler
 
 			characterController.SimpleMove(transform.forward * (moveSpeedToUse * vertical)); //Hareket ettirir
 		}
+
+		if (horizontalMove != 0)
+		{
+			
+			characterController.SimpleMove(transform.right * (forwardMoveSpeed * horizontalMove));
+		}
+		moveDirection.y = yStore;
+
+		if (characterController.isGrounded)
+		{
+			if (Input.GetButtonDown("Jump"))
+			{
+				moveDirection.y = 0f;
+				moveDirection.y = jumpForce;
+			}
+		}
+
+		moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
+		
+		characterController.Move(moveDirection*Time.deltaTime);
 
 		if (currentHealth <= 0)
 		{

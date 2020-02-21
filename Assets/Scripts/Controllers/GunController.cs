@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using Cinemachine;
+using UnityEngine;
 
 namespace Controllers
 {
@@ -28,6 +31,18 @@ namespace Controllers
 
 		private float timer;
 
+		public LayerMask bulletLayer;
+
+		LineRenderer line;
+
+		private void Start()
+		{
+			line = GetComponent<LineRenderer>();
+			line.SetVertexCount(2);
+			
+			line.SetWidth(0.1f, 0.25f);
+		}
+
 		void Update()
 		{
 			timer += Time.deltaTime;// Atış sıklığı için timer. Performans artışı için güncellenebilir
@@ -50,24 +65,42 @@ namespace Controllers
 
 			Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f); //Ekranımızının tam ortasına ışın atar
 			
-			//Test
-			Debug.DrawRay(firePoint.position, ray.direction * 100, Color.red, 12f); //Silahın ucundan rayin doğrultusunda ışın atar
-			Debug.DrawRay(ray.origin, ray.direction * 100, Color.green, 12f); //Rayin merkezinden rayin doğrultusuna ışın atar
-		
+			// BulletController newBullet = Instantiate(bullet,firePoint.position,Quaternion.identity) as BulletController; //Siahın ucunda mermi oluşturur.
+			//
+			// newBullet.speed = bulletSpeed; //Merminin hızını ayarlar
 			
-			BulletController newBullet = Instantiate(bullet,firePoint.position,Quaternion.identity) as BulletController; //Siahın ucunda mermi oluşturur.
-			
-			newBullet.speed = bulletSpeed; //Merminin hızını ayarlar
-			newBullet.moveDirection = ray.direction*100; // Merminin gideceği yönü ayarlar. Buralarda bir yerlerde aim ile ilgili bir sıkıntı var.
-			
-			newBullet.transform.SetParent(GameMaster.instance.levelHolder);
-			
+
 			RaycastHit hitInfo;
 
-			if (Physics.Raycast(ray, out hitInfo, 10))
+			if (Physics.Raycast(ray, out hitInfo, 10000,bulletLayer))
 			{
 				//Eğer ışın bir şeye çarptıysa onun bilgilerini hitInfoya kaydeder
+
+				StartCoroutine(ShotEffect());
+				line.SetPosition(0,firePoint.position);
+				line.SetPosition(1,hitInfo.point);
+				
+				//newBullet.moveDirection = hitInfo.point;
+				
+				if (hitInfo.collider.CompareTag("Enemy"))
+				{
+					Debug.Log("Laser");
+					Destroy(hitInfo.transform.gameObject);
+				}
 			}
+			
+			
+			
+			//newBullet.transform.SetParent(GameMaster.instance.levelHolder);
 		}
+
+		IEnumerator ShotEffect()
+		{
+			line.enabled = true;
+			yield return new WaitForSeconds(.01f);
+			line.enabled = false;
+		}
+
+		
 	}
 }
