@@ -113,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
 
 	IEnumerator PlayerOnDeath()
 	{
+		characterController.enabled = false;
 		animator.SetBool("MeDie",true);
 		yield return new WaitForSeconds(3f);
 		UiMaster.instance.OpenPlayerDeadPanel(true);
