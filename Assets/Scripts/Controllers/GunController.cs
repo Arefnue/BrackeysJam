@@ -49,7 +49,7 @@ namespace Controllers
 			if (timer >= fireRate)
 			{
 				//Ateş etme tuşuna basarsa
-				if (Input.GetButton("Fire1"))
+				if (Input.GetButton("Fire1") && GameMaster.instance.canAttack != false)
 				{
 					timer = 0f;
 					FireGun();
@@ -60,8 +60,8 @@ namespace Controllers
 		//Ateş et
 		private void FireGun()
 		{
-			muzzleParticle.Play();//Ateş etme particle.Geçici
-			gunFireSource.Play();// Ateş etme ses. Geçici
+			//muzzleParticle.Play();//Ateş etme particle.Geçici
+			//gunFireSource.Play();// Ateş etme ses. Geçici
 
 			Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f); //Ekranımızının tam ortasına ışın atar
 			
@@ -84,7 +84,7 @@ namespace Controllers
 				
 				if (hitInfo.collider.CompareTag("Enemy"))
 				{
-					Debug.Log("Laser");
+					
 					Destroy(hitInfo.transform.gameObject);
 				}
 			}

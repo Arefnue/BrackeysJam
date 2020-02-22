@@ -49,7 +49,8 @@ namespace Controllers
         private PlayerMovement playerObject;
 
         #endregion
-        
+
+        private Animator animator;
 
         private void Start()
         {
@@ -57,6 +58,8 @@ namespace Controllers
             playerObject = FindObjectOfType<PlayerMovement>();
             playerTransform = playerObject.transform;
             holwyTransform = GameObject.FindGameObjectWithTag("Holwy").transform;
+            
+            animator = GetComponentInChildren<Animator>();
             
             agent = GetComponent<NavMeshAgent>();
 
@@ -83,11 +86,13 @@ namespace Controllers
             {
                 case State.Move:
                     
+                    animator.SetInteger("State",1);
                     //Hareket animasyonları vs. buraya gelecek
                     
                     agent.SetDestination(targetTransform.position);
                     break;
                 case State.Attack:
+                    
                     
                     //Buraya düşmanın saldırı animasyonu ve particleı gelecek
                 
@@ -108,6 +113,8 @@ namespace Controllers
                     
                     break;
                 case State.Idle:
+                    
+                    
                     break;
                 default:
                     Debug.Log("Default!");
@@ -138,11 +145,23 @@ namespace Controllers
 
         IEnumerator Attack()
         {
+            agent.SetDestination(transform.position);
             state = State.Busy;
-            playerObject.TakeDamage(damage);
-            Debug.Log("AAAr");
-            yield return new WaitForSeconds(1f);
+            transform.LookAt(targetTransform);
+            animator.SetInteger("State",2);
+            
+            yield return new WaitForSeconds(0.5f);
+            
+            if (Vector3.Distance(transform.position, targetTransform.position) <= attackRangeRadius+1)
+            {
+                playerObject.TakeDamage(damage);
+            }
+            
+            yield return new WaitForSeconds(0.5f);
 
+            
+            
+            animator.SetInteger("State",0);
             state = State.Idle;
         }
 
@@ -150,21 +169,15 @@ namespace Controllers
         //Bir şeye çarpınca çalışır
         private void OnTriggerEnter(Collider other)
         {
-            //Eğer mermiye çarparsa
-            if (other.CompareTag("Bullet"))
-            {
-                //Portal ile ölme animasyonu, particleı vs. buraya gelecek
-                state = State.Destroy;
-                Debug.Log("Enemy is dead");
-                Destroy(gameObject);
-            }
             
-            
+
         }
 
         //Düşman destroy olduğunda çalışır
         private void OnDestroy()
         {
+            
+            
             GameMaster.instance.enemyList.Remove(this);//Düşman listesinden bunu çıkarır
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -10,6 +11,10 @@ public class PlayerMovement : MonoBehaviour
 	private float forwardMoveSpeed = 7.5f;
 	[SerializeField]
 	private float backwardMoveSpeed = 3;
+	
+	[SerializeField]
+	private float sideMoveSpeed = 7.5f;
+	
 	[SerializeField]
 	private float turnSpeed = 150f;
 	
@@ -49,15 +54,29 @@ public class PlayerMovement : MonoBehaviour
 		var vertical = Input.GetAxis("Vertical");
 
 		var horizontalMove = Input.GetAxis("Horizontal");
-		
-		animator.SetFloat("Speed", vertical); //Animasyon için
 
+		var speedAnim = vertical;
+		var forwardMoveSpeedHolder = forwardMoveSpeed;
+		if (Input.GetKey(KeyCode.LeftShift) && vertical >0)
+		{
+			forwardMoveSpeedHolder *= 2;
+			speedAnim *= 2;
+			GameMaster.instance.canAttack = false;
+		}
+		else
+		{
+			GameMaster.instance.canAttack = true;
+		}
+		
+		
+		animator.SetFloat("Speed", speedAnim); //Animasyon için
+		animator.SetFloat("Rotate",horizontalMove);
 		transform.Rotate(Vector3.up, horizontal * turnSpeed * Time.deltaTime);// Sağ sol tuşlarına basıldığında döndürür
 		
 		
 		if (vertical != 0)
 		{
-			float moveSpeedToUse = (vertical > 0) ? forwardMoveSpeed : backwardMoveSpeed; //İleri ve geri hız değerlerini belirler
+			float moveSpeedToUse = (vertical > 0) ? forwardMoveSpeedHolder : backwardMoveSpeed; //İleri ve geri hız değerlerini belirler
 
 			characterController.SimpleMove(transform.forward * (moveSpeedToUse * vertical)); //Hareket ettirir
 		}
@@ -65,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
 		if (horizontalMove != 0)
 		{
 			
-			characterController.SimpleMove(transform.right * (forwardMoveSpeed * horizontalMove));
+			characterController.SimpleMove(transform.right * (sideMoveSpeed * horizontalMove));
 		}
 		moveDirection.y = yStore;
 
@@ -84,12 +103,22 @@ public class PlayerMovement : MonoBehaviour
 
 		if (currentHealth <= 0)
 		{
+			StartCoroutine(PlayerOnDeath());
 			Debug.Log("Player died");
-			UiMaster.instance.OpenPlayerDeadPanel(true);
+			
 		}
 		
 
 	}
+
+	IEnumerator PlayerOnDeath()
+	{
+		animator.SetBool("MeDie",true);
+		yield return new WaitForSeconds(3f);
+		UiMaster.instance.OpenPlayerDeadPanel(true);
+	}
+	
+	
 	
 	public void TakeDamage(int damage)
 	{

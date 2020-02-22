@@ -20,7 +20,8 @@ public class GameMaster : MonoBehaviour
     public int hungerOnHolwy;
 
     public Transform levelHolder;
-    
+
+    public bool canAttack;
     private void Awake()
     {
         if (instance != null)
