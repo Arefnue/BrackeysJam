@@ -99,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
 		moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
 		
-		characterController.Move(moveDirection*Time.deltaTime);
+		//characterController.Move(moveDirection*Time.deltaTime);
 
 		if (currentHealth <= 0)
 		{

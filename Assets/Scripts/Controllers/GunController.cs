@@ -84,8 +84,10 @@ namespace Controllers
 				
 				if (hitInfo.collider.CompareTag("Enemy"))
 				{
+					EnemyController enemyController = hitInfo.collider.gameObject.GetComponent<EnemyController>();
 					
-					Destroy(hitInfo.transform.gameObject);
+					enemyController.EnemyOnDeath();
+
 				}
 			}
 			

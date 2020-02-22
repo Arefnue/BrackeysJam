@@ -25,6 +25,7 @@
           </e>
           <e p="PlayerController.cs" t="Include" />
           <e p="PlayerMovement.cs" t="Include" />
+          <e p="PropThrower.cs" t="Include" />
           <e p="Spawners" t="Include">
             <e p="EnemySpawner.cs" t="Include" />
             <e p="PropSpawner.cs" t="Include" />

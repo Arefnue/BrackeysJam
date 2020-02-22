@@ -23,6 +23,7 @@ namespace Controllers
     
         private NavMeshAgent agent;
         private Transform targetTransform;
+        public Transform throwHeadPosition;
         
         [HideInInspector]
         public Vector3 spawnPosition;
@@ -165,18 +166,30 @@ namespace Controllers
             state = State.Idle;
         }
 
-        
-        //Bir şeye çarpınca çalışır
-        private void OnTriggerEnter(Collider other)
+
+
+        public void EnemyOnDeath()
         {
             
+            
+            StartCoroutine(AnimateDeath());
+        }
 
+        IEnumerator AnimateDeath()
+        {
+            state = State.Busy;
+            agent.SetDestination(transform.position);
+
+            animator.SetInteger("State",3);
+            yield return new WaitForSeconds(1f);
+            Destroy(gameObject);
         }
 
         //Düşman destroy olduğunda çalışır
         private void OnDestroy()
         {
             
+            PropThrower.instance.ThrowProp(throwHeadPosition.position);
             
             GameMaster.instance.enemyList.Remove(this);//Düşman listesinden bunu çıkarır
         }
