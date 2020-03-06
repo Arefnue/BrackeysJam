@@ -22,6 +22,8 @@ public class GameMaster : MonoBehaviour
     public Transform levelHolder;
 
     public bool canAttack;
+
+    public AudioClip propCollectSound;
     private void Awake()
     {
         if (instance != null)
@@ -55,6 +57,9 @@ public class GameMaster : MonoBehaviour
             
             hungerOnPlayer += value;//Envantere ekle
             UiMaster.instance.carrySlider.SetHealth(hungerOnPlayer);
+            
+            SoundManager.instance.Play(propCollectSound);
+            
             Destroy(prop);//Çarptığımız objeyi sil
             
         }

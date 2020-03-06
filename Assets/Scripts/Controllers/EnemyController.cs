@@ -29,6 +29,8 @@ namespace Controllers
         public Vector3 spawnPosition;
         
         public float attackRangeRadius;
+
+        public bool isTargetHolwy;
         
         #endregion
         
@@ -53,18 +55,32 @@ namespace Controllers
 
         private Animator animator;
 
+        public AudioClip enemyMoveSound;
+        public AudioClip enemyAttackSound;
+
         private void Start()
         {
             GameMaster.instance.enemyList.Add(this);
             playerObject = FindObjectOfType<PlayerMovement>();
             playerTransform = playerObject.transform;
-            holwyTransform = GameObject.FindGameObjectWithTag("Holwy").transform;
+            holwyTransform = FindObjectOfType<HolwyController>().transform;
             
             animator = GetComponentInChildren<Animator>();
             
             agent = GetComponent<NavMeshAgent>();
 
-            agent.stoppingDistance = attackRangeRadius;
+            if (isTargetHolwy != true)
+            {
+                agent.stoppingDistance = attackRangeRadius;
+                targetTransform = playerTransform;
+
+            }
+            else
+            {
+                agent.stoppingDistance = 0;
+                targetTransform = holwyTransform;
+            }
+            
             spawnPosition = transform.position;
             state = State.Idle;
 
@@ -75,13 +91,6 @@ namespace Controllers
             DetermineState(); //Düşmanımızın davranışını burda belirliyoruz
             
             
-            //Düşmanların hepsini öldürür
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                state = State.Destroy;
-                Destroy(gameObject);
-            }
-            
             //State machine
             switch (state)
             {
@@ -91,6 +100,7 @@ namespace Controllers
                     //Hareket animasyonları vs. buraya gelecek
                     
                     agent.SetDestination(targetTransform.position);
+                    
                     break;
                 case State.Attack:
                     
@@ -139,7 +149,7 @@ namespace Controllers
             }
             else
             {
-                targetTransform = playerTransform; //Düşmanların hedefini playera odaklar. Zaman yeterse AI güçlendirip belli kosullarda bunu Holwy'e yönlendireceğiz
+
                 state = State.Move;
             }
         }
@@ -148,11 +158,14 @@ namespace Controllers
         {
             agent.SetDestination(transform.position);
             state = State.Busy;
-            transform.LookAt(targetTransform);
+            transform.LookAt(playerTransform);
             animator.SetInteger("State",2);
+            
+            
             
             yield return new WaitForSeconds(0.5f);
             
+            SoundManager.instance.Play(enemyAttackSound);
             if (Vector3.Distance(transform.position, targetTransform.position) <= attackRangeRadius+1)
             {
                 playerObject.TakeDamage(damage);
@@ -170,8 +183,6 @@ namespace Controllers
 
         public void EnemyOnDeath()
         {
-            
-            
             StartCoroutine(AnimateDeath());
         }
 
@@ -179,18 +190,15 @@ namespace Controllers
         {
             state = State.Busy;
             agent.SetDestination(transform.position);
-
             animator.SetInteger("State",3);
             yield return new WaitForSeconds(1f);
+            PropThrower.instance.ThrowProp(throwHeadPosition.position);
             Destroy(gameObject);
         }
 
         //Düşman destroy olduğunda çalışır
         private void OnDestroy()
         {
-            
-            PropThrower.instance.ThrowProp(throwHeadPosition.position);
-            
             GameMaster.instance.enemyList.Remove(this);//Düşman listesinden bunu çıkarır
         }
     }

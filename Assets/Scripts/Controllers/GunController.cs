@@ -14,19 +14,15 @@ namespace Controllers
 		[SerializeField]
 		[Range(1, 10)]
 		private int damage = 1;
-
-		[SerializeField]
-		private ParticleSystem muzzleParticle;
-
-		[SerializeField]
-		private AudioSource gunFireSource;
-
+		
 		[SerializeField] private Transform playerTransform;
 
 		[SerializeField] private Transform firePoint;
 
 		[SerializeField] private BulletController bullet;
-	
+
+		public AudioClip laserSound;
+		
 		public float bulletSpeed;
 
 		private float timer;
@@ -61,7 +57,7 @@ namespace Controllers
 		private void FireGun()
 		{
 			//muzzleParticle.Play();//Ateş etme particle.Geçici
-			//gunFireSource.Play();// Ateş etme ses. Geçici
+			SoundManager.instance.Play(laserSound);
 
 			Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f); //Ekranımızının tam ortasına ışın atar
 			
